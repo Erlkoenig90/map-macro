@@ -163,7 +163,7 @@
 /**
  * if "arg" is nonempty, do f(arg)
  */
-#define MAP_DO_F_IF_NONEMPTY(arg, f) MAP_IF_EMPTY(arg, , f(arg);)
+#define MAP_DO_F_IF_NONEMPTY(arg, f) MAP_IF_EMPTY(arg, , f(arg))
 
 
 

@@ -34,3 +34,10 @@ MAP_UD_I(PRINT_STREAM_I, stderr, 1, 2, 3, 4, 5)
 /* Pass user-defined data and an index to each list invocation */
 #define INVOKE_I(x, fun, index) fun(index, x)
 int arr2 [] = { MAP_LIST_UD_I(INVOKE_I, map2, 1, 2, 3, 4, 5) };
+
+// Don't do f() when there is a trailing comma
+MAP_HANDLE_TRAILING_COMMA(f, a, b, c,) // ==> "f(a) f(b) f(c)"
+MAP_HANDLE_TRAILING_COMMA(f, a, , b, c,) // ==> "f(a) f(b) f(c)"
+
+MAP(f, a, b, c,) // ==> "f(a) f(b) f(c) f()"
+MAP(f, a, , b, c,) // ==> "f(a) f() f(b) f(c) f()"
