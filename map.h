@@ -117,6 +117,56 @@
  */
 #define MAP_LIST_UD_I(f, userdata, ...) EVAL(MAP_LIST2_UD_I(f, userdata, 0, __VA_ARGS__, ()()(), ()()(), ()()(), 0))
 
+/**
+ * An adjustment of MAP that ignores empty arguments.
+ * In particular, this handles a trailing comma in the argument list.
+ */
+#define MAP_ALLOW_TRAILING_COMMA(f, args...)                               \
+  MAP_UD(DO_F_IF_NONEMPTY, f, args)
+
+// See https://gustedt.wordpress.com/2010/06/08/detect-empty-macro-arguments/
+
+/** 
+ * If "args" has no comma, we see exactly one argument and _2 in
+ * HAS_COMMA_HELPER is set to 0. If there is exactly one comma, list looks like
+ * `a,b,1, 0` and _2 is set to 1.
+ */
+#define HAS_COMMA(args...) HAS_COMMA_HELPER(args, 1, 0)
+#define HAS_COMMA_HELPER(_0, _1, _2, ...) _2
+
+/** 
+ * If argument is nonempty (and doesn't start with ()), then
+ * "_TRIGGER_PARENTHESIS_" is separated from the parens and will not expand. If argument is empty,
+ * "_TRIGGER_PARENTHESIS_()" is seen and expands into a comma, detected by HAS_COMMA
+ */
+#define IS_EMPTY(args...) HAS_COMMA(_TRIGGER_PARENTHESIS_ args())
+#define _TRIGGER_PARENTHESIS_(...) ,
+
+/**
+ * If "test" expands to 1, do "case_true", if it's 0 do "case_false"
+ * ## blocks "test" from being expanded. We want "test" to be expanded
+ * So first we do extra layer of indirection TEST_EXP.
+ */
+#define TEST(test, case_true, case_false)                                  \
+  TEST_EXP(test, case_true, case_false)
+#define TEST_EXP(test, case_true, case_false)                              \
+  TEST_##test(case_true, case_false)
+#define TEST_0(case_true, case_false) case_false
+#define TEST_1(case_true, case_false) case_true
+
+/**
+ * if "arg" is empty, do "case_true", if nonempty do "case_false"
+ */
+#define IF_EMPTY(arg, case_true, case_false)                               \
+  TEST(IS_EMPTY(arg), case_true, case_false)
+
+/**
+ * if "arg" is nonempty, do f(arg)
+ */
+#define DO_F_IF_NONEMPTY(arg, f) IF_EMPTY(arg, , f(arg);)
+
+
+
 /*
  * Because the preprocessor can't do arithmetic that produces integer literals for the *_I macros, we have to do it manually.
  * Since the number of parameters is limited anyways, this is sufficient for all cases. If extra EVAL layers are added, these
