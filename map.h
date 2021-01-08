@@ -121,8 +121,8 @@
  * An adjustment of MAP that ignores empty arguments.
  * In particular, this handles a trailing comma in the argument list.
  */
-#define MAP_ALLOW_TRAILING_COMMA(f, args...)                               \
-  MAP_UD(DO_F_IF_NONEMPTY, f, args)
+#define MAP_HANDLE_TRAILING_COMMA(f, args...)                               \
+  MAP_UD(MAP_DO_F_IF_NONEMPTY, f, args)
 
 // See https://gustedt.wordpress.com/2010/06/08/detect-empty-macro-arguments/
 
@@ -131,39 +131,39 @@
  * HAS_COMMA_HELPER is set to 0. If there is exactly one comma, list looks like
  * `a,b,1, 0` and _2 is set to 1.
  */
-#define HAS_COMMA(args...) HAS_COMMA_HELPER(args, 1, 0)
-#define HAS_COMMA_HELPER(_0, _1, _2, ...) _2
+#define MAP_HAS_COMMA(args...) MAP_HAS_COMMA_HELPER(args, 1, 0)
+#define MAP_HAS_COMMA_HELPER(_0, _1, _2, ...) _2
 
 /** 
  * If argument is nonempty (and doesn't start with ()), then
  * "_TRIGGER_PARENTHESIS_" is separated from the parens and will not expand. If argument is empty,
  * "_TRIGGER_PARENTHESIS_()" is seen and expands into a comma, detected by HAS_COMMA
  */
-#define IS_EMPTY(args...) HAS_COMMA(_TRIGGER_PARENTHESIS_ args())
-#define _TRIGGER_PARENTHESIS_(...) ,
+#define MAP_IS_EMPTY(args...) MAP_HAS_COMMA(MAP__TRIGGER_PARENTHESIS__ args())
+#define MAP__TRIGGER_PARENTHESIS__(...) ,
 
 /**
  * If "test" expands to 1, do "case_true", if it's 0 do "case_false"
  * ## blocks "test" from being expanded. We want "test" to be expanded
  * So first we do extra layer of indirection TEST_EXP.
  */
-#define TEST(test, case_true, case_false)                                  \
-  TEST_EXP(test, case_true, case_false)
-#define TEST_EXP(test, case_true, case_false)                              \
-  TEST_##test(case_true, case_false)
-#define TEST_0(case_true, case_false) case_false
-#define TEST_1(case_true, case_false) case_true
+#define MAP_TEST_PREDICATE(test, case_true, case_false)                                  \
+  MAP_TEST_PREDICATE_EXP(test, case_true, case_false)
+#define MAP_TEST_PREDICATE_EXP(test, case_true, case_false)                              \
+  MAP_TEST_PREDICATE_##test(case_true, case_false)
+#define MAP_TEST_PREDICATE_0(case_true, case_false) case_false
+#define MAP_TEST_PREDICATE_1(case_true, case_false) case_true
 
 /**
  * if "arg" is empty, do "case_true", if nonempty do "case_false"
  */
-#define IF_EMPTY(arg, case_true, case_false)                               \
-  TEST(IS_EMPTY(arg), case_true, case_false)
+#define MAP_IF_EMPTY(arg, case_true, case_false)                               \
+  MAP_TEST_PREDICATE(MAP_IS_EMPTY(arg), case_true, case_false)
 
 /**
  * if "arg" is nonempty, do f(arg)
  */
-#define DO_F_IF_NONEMPTY(arg, f) IF_EMPTY(arg, , f(arg);)
+#define MAP_DO_F_IF_NONEMPTY(arg, f) MAP_IF_EMPTY(arg, , f(arg);)
 
 
 
