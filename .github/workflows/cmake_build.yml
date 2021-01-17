@@ -33,7 +33,15 @@ jobs:
         uses: lukka/run-cmake@main
         id: runcmake
         with:
-          cmakeGenerator: 'Ninja'  
+          cmakeGenerator: 'Ninja'
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
           buildWithCMakeArgs: '-- -v'
+          buildDirectory: '${{ runner.workspace }}/b/ninja/'
+      - name: Run CMake+Ninja without triplet test
+        uses: lukka/run-cmake@main
+        id: runcmake
+        with:
+          cmakeGenerator: 'Ninja'
+          cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
+          buildWithCMakeArgs: '--target test -- -v'
           buildDirectory: '${{ runner.workspace }}/b/ninja/'
