@@ -5,7 +5,7 @@ enable_testing()
 
 add_custom_command(
     OUTPUT  autotest.c
-    COMMAND python3 ./gentest.py ${CMAKE_CURRENT_BINARY_DIR}/autotest.c
+    COMMAND python3 ${CMAKE_SOURCE_DIR}/gentest.py ${CMAKE_CURRENT_BINARY_DIR}/autotest.c
     DEPENDS gentest.py
 )
 
