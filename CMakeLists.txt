@@ -12,7 +12,10 @@ add_custom_command(
 set(CMAKE_C_STANDARD 99)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
-add_executable(MapMacroTestsuite ${CMAKE_CURRENT_BINARY_DIR}/autotest.c)
+add_executable(MapMacroTestsuite ${CMAKE_CURRENT_BINARY_DIR}/autotest.c ${CMAKE_SOURCE_DIR}/map.h)
+
+target_include_directories(MapMacroTestsuite PRIVATE ${CMAKE_SOURCE_DIR})
+
 
 add_test(AutoTest MapMacroTestsuite)
 
