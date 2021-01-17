@@ -65,7 +65,7 @@ jobs:
         shell: bash
       # NOTE: this is necessary to correctly find and use cl.exe
       - name: setup devcmd
-        uses: ilammy/msvc-dev-cmd@v1.3.0
+        uses: ilammy/msvc-dev-cmd@v1.5.0
       - name: Run CMake+Ninja without triplet
         uses: lukka/run-cmake@main
         id: runcmake
