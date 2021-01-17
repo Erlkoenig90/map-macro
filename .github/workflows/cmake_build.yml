@@ -5,7 +5,7 @@ name: hosted-basic-autocache
 on: [push]
 
 jobs:
-  job:
+  job1:
     name: ${{ matrix.os }}-hosted-basic
     runs-on: ${{ matrix.os }}
     strategy:
@@ -43,7 +43,7 @@ jobs:
           cmakeListsTxtPath: '${{ github.workspace }}/CMakeLists.txt'
           buildWithCMakeArgs: '--target test -- -v'
           buildDirectory: '${{ runner.workspace }}/b/ninja/'
-  job:
+  job2:
     name: ${{ matrix.os }}-hosted-basic
     runs-on: ${{ matrix.os }}
     strategy:
